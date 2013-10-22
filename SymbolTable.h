@@ -18,7 +18,10 @@
 #define T_FLOAT 2
 typedef char*string;
 
-
+typedef union _values{
+	int ivalue;
+	float fvalue;
+}values;
 typedef struct _symbolTable{
     char* name;
     int type;

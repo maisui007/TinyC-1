@@ -120,11 +120,16 @@ stmt        : IF exp THEN stmt
                                               return FALSE;
                                             }else{
                                               //operation
+                                              SymbolTable * t1 = getValue(st, $1->name);
+                                              t1 -> value = $3->value;
+                                              /*
+                                              printf("type %s %d\n",$1->name, $1->type);
                                               if($1->type == T_INTEGER){
                                                 $1 -> value = (int)$3->value;
                                               }else{
                                                 $1 -> value = $3->value;
                                               }
+                                              */
                                             }
                                             
                                           }
@@ -178,11 +183,26 @@ exp         : simple_exp LT simple_exp      {}
             ;
 
 simple_exp  : simple_exp PLUS term    {
-
-                                          
+                                        if($1 ->type == $3 ->type){
+                                          $$ -> value = $1 -> value + $3->value;
+                                          $$ -> type  = $1 -> type;
+                                        }else{
+                                          yyerror("Warning, implicit casting between int and float ");
+                                          $$ -> value = $1 -> value + $3->value;
+                                          $$ -> type  = T_FLOAT;
+                                        }
                                       }
+
+
             | simple_exp MINUS term   {
-                                        $$->value = $1->value - $3->value;
+                                        if($1 ->type == $3 ->type){
+                                          $$ -> value = $1 -> value - $3 -> value;
+                                          $$ -> type  = $1 -> type;
+                                        }else{
+                                          yyerror("Warning, implicit casting between int and float ");
+                                          $$ -> value = $1 -> value - $3 -> value;
+                                          $$ -> type  = T_FLOAT;
+                                        }
                                       }
             | term                    {
                                         $$ = $1;
@@ -228,7 +248,7 @@ factor      : LPAREN exp RPAREN   {
             | INT_NUM             {
                                     SymbolTable *t = (SymbolTable*)malloc(sizeof(SymbolTable));
                                     t -> value = $1;
-                                    t -> type = T_INTEGER;
+                                    t -> type  = T_INTEGER;
                                     $$ = t;
                                     
                                   }
@@ -236,11 +256,14 @@ factor      : LPAREN exp RPAREN   {
                                     
                                     SymbolTable *t = (SymbolTable*)malloc(sizeof(SymbolTable));
                                     t -> value = $1;
-                                    t -> type = T_FLOAT;
+                                    t -> type  = T_FLOAT;
                                     $$ = t;
                                   }
             | variable            {//se regresa el valor de la variable
-                                    $$ = $1;
+                                    SymbolTable *t = (SymbolTable*)malloc(sizeof(SymbolTable));
+                                    t -> value = $1 -> value;
+                                    t -> type  = $1 -> type;
+                                    $$ = t;
                                   }
             ;
 
