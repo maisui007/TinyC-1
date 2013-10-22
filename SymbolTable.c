@@ -1,6 +1,3 @@
-#ifndef __SymbolTablec__
-#define __SymbolTablec__
-#include "SymbolTable.h"
 #include "lex.yy.c"
 
 
@@ -180,10 +177,10 @@ void showTable(SymbolTable*tabla){
 #endif
     for(i=0; i< size; i++){
       //if(tabla[i].name != NULL){
-        if(tabla[i].type == 1){
-          printf("Index: %3d   name: %3s   type: int value: %d\n", i, tabla[i].name,(int)tabla[i].value);  
-        }else if(tabla[i].type == 2){
-          printf("Index: %3d   name: %3s   type: float value: %f\n", i, tabla[i].name, tabla[i].value);
+        if(tabla[i].type == T_INTEGER){
+          printf("Index: %3d   name: %3s   type: int value: %d\n", i, tabla[i].name,tabla[i].val.ivalue);  
+        }else if(tabla[i].type == T_FLOAT){
+          printf("Index: %3d   name: %3s   type: float value: %f\n", i, tabla[i].name, tabla[i].val.fvalue);
         }else{
           printf("Index: %3d   name: %3s   type: NULL \n", i, tabla[i].name);
         }
@@ -191,15 +188,3 @@ void showTable(SymbolTable*tabla){
       //}
     }
 }
-
-int main (){
-  st = initSymbolTable();
-  if(yyparse() == 0){
-    printf("No errors\n");
-    showTable(st);
-  }
-  
-  return 0;
-  
-}
-#endif /* defined(__SymbolTable__) */

@@ -509,10 +509,10 @@ static const yytype_int8 yyrhs[] =
 static const yytype_uint16 yyrline[] =
 {
        0,    86,    86,    89,    90,    93,   105,   106,   109,   110,
-     113,   114,   115,   116,   136,   150,   164,   165,   166,   167,
-     168,   169,   170,   171,   174,   177,   178,   179,   180,   181,
-     182,   185,   197,   207,   212,   227,   242,   245,   248,   255,
-     262,   270
+     113,   114,   115,   116,   153,   167,   181,   182,   183,   184,
+     185,   186,   187,   188,   191,   194,   195,   196,   197,   198,
+     199,   202,   234,   265,   270,   313,   362,   365,   368,   378,
+     386,   403
 };
 #endif
 
@@ -1496,30 +1496,47 @@ yyreduce:
 
   case 13:
 #line 116 "tinyC.y"
-    {
-                                            if(findValue(st, (yyvsp[(1) - (4)].st)->name) == FALSE){
-                                              printf("No variable '%s' declared before\n", (yyvsp[(1) - (4)].st)->name);
+    { //the variable and expression is the same
+                                            SymbolTable * t = getValue(st, (yyvsp[(1) - (4)].st)->name);
+                                            if((yyvsp[(1) - (4)].st) -> type == (yyvsp[(3) - (4)].st) -> type){
+                                              if((yyvsp[(1) - (4)].st) -> type == T_FLOAT){
+                                                //$1 -> val.fvalue = $3 -> val.fvalue;
+                                                t -> val.fvalue  = (yyvsp[(3) - (4)].st) -> val.fvalue;
+                                              }else if((yyvsp[(1) - (4)].st) -> type == T_INTEGER){
+                                                //$1 -> val.ivalue = $3 -> val.ivalue;
+                                                t -> val.ivalue  = (yyvsp[(3) - (4)].st) -> val.ivalue;
+                                              }
+                                            //the variable and expression not the same  
+                                            }else{
+                                              yyerror("#Warning 4, implicit casting between int and float ");
+                                              //check if term is int and factor is float
+                                              if((yyvsp[(1) - (4)].st) -> type == T_INTEGER && (yyvsp[(3) - (4)].st) -> type == T_FLOAT){
+                                                //$$ -> value      = ($1 -> value + $3 -> value);
+                                                //$1 -> val.ivalue = (int)$3 -> val.fvalue;
+                                                t -> val.ivalue  = (int)(yyvsp[(3) - (4)].st) -> val.fvalue;
+                                                //check if term is float and factor is int
+                                              }else if((yyvsp[(1) - (4)].st) -> type == T_FLOAT && (yyvsp[(3) - (4)].st) -> type == T_INTEGER){
+                                                //$$ -> value      = ($1 -> value + $3 -> value);
+                                                //$1 -> val.fvalue = (float)$3 -> val.ivalue;
+                                                t -> val.fvalue  = (float)(yyvsp[(3) - (4)].st) -> val.ivalue;
+                                              }
+                                            }
+                                            /*if(findValue(st, $1->name) == FALSE){
+                                              printf("No variable '%s' declared before\n", $1->name);
                                               yyerror("Error");
                                               return FALSE;
                                             }else{
                                               //operation
-                                              SymbolTable * t1 = getValue(st, (yyvsp[(1) - (4)].st)->name);
-                                              t1 -> value = (yyvsp[(3) - (4)].st)->value;
-                                              /*
-                                              printf("type %s %d\n",$1->name, $1->type);
-                                              if($1->type == T_INTEGER){
-                                                $1 -> value = (int)$3->value;
-                                              }else{
-                                                $1 -> value = $3->value;
-                                              }
-                                              */
+                                              SymbolTable * t1 = getValue(st, $1->name);
+                                              t1 -> value = $3->value;
                                             }
+                                            */
                                             
                                           ;}
     break;
 
   case 14:
-#line 136 "tinyC.y"
+#line 153 "tinyC.y"
     {/*
                                                 if(findValue(st, $1->name) == FALSE){
                                                   printf("No variable '%s' declared before\n", $1->name);
@@ -1537,7 +1554,7 @@ yyreduce:
     break;
 
   case 15:
-#line 150 "tinyC.y"
+#line 167 "tinyC.y"
     {/*
                                                   if(findValue(st, $1->name) == FALSE){
                                                     printf("No variable '%s' declared before\n", $1->name);
@@ -1555,160 +1572,265 @@ yyreduce:
     break;
 
   case 16:
-#line 164 "tinyC.y"
-    {;}
-    break;
-
-  case 17:
-#line 165 "tinyC.y"
-    {;}
-    break;
-
-  case 18:
-#line 166 "tinyC.y"
-    {;}
-    break;
-
-  case 19:
-#line 167 "tinyC.y"
-    {;}
-    break;
-
-  case 20:
-#line 168 "tinyC.y"
-    {;}
-    break;
-
-  case 21:
-#line 169 "tinyC.y"
-    {;}
-    break;
-
-  case 22:
-#line 170 "tinyC.y"
-    {;}
-    break;
-
-  case 25:
-#line 177 "tinyC.y"
-    {;}
-    break;
-
-  case 26:
-#line 178 "tinyC.y"
-    {;}
-    break;
-
-  case 27:
-#line 179 "tinyC.y"
-    {;}
-    break;
-
-  case 28:
-#line 180 "tinyC.y"
-    {;}
-    break;
-
-  case 29:
 #line 181 "tinyC.y"
     {;}
     break;
 
-  case 30:
+  case 17:
 #line 182 "tinyC.y"
+    {;}
+    break;
+
+  case 18:
+#line 183 "tinyC.y"
+    {;}
+    break;
+
+  case 19:
+#line 184 "tinyC.y"
+    {;}
+    break;
+
+  case 20:
+#line 185 "tinyC.y"
+    {;}
+    break;
+
+  case 21:
+#line 186 "tinyC.y"
+    {;}
+    break;
+
+  case 22:
+#line 187 "tinyC.y"
+    {;}
+    break;
+
+  case 25:
+#line 194 "tinyC.y"
+    {;}
+    break;
+
+  case 26:
+#line 195 "tinyC.y"
+    {;}
+    break;
+
+  case 27:
+#line 196 "tinyC.y"
+    {;}
+    break;
+
+  case 28:
+#line 197 "tinyC.y"
+    {;}
+    break;
+
+  case 29:
+#line 198 "tinyC.y"
+    {;}
+    break;
+
+  case 30:
+#line 199 "tinyC.y"
     {(yyval.st) = (yyvsp[(1) - (1)].st);;}
     break;
 
   case 31:
-#line 185 "tinyC.y"
+#line 202 "tinyC.y"
     {
-                                        if((yyvsp[(1) - (3)].st) ->type == (yyvsp[(3) - (3)].st) ->type){
-                                          (yyval.st) -> value = (yyvsp[(1) - (3)].st) -> value + (yyvsp[(3) - (3)].st)->value;
-                                          (yyval.st) -> type  = (yyvsp[(1) - (3)].st) -> type;
+                                        // same type
+                                        if((yyvsp[(1) - (3)].st) -> type == (yyvsp[(3) - (3)].st) -> type){
+                                          if((yyvsp[(3) - (3)].st) -> type == T_FLOAT){
+                                            // the types are floating
+                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value + (yyvsp[(3) - (3)].st) -> value);
+                                            (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue + (yyvsp[(3) - (3)].st) -> val.fvalue);
+                                            (yyval.st) -> type = T_FLOAT;
+                                          }else{
+                                            // the types are integer
+                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value + (yyvsp[(3) - (3)].st) -> value);
+                                            (yyval.st) -> val.ivalue = ((yyvsp[(1) - (3)].st) -> val.ivalue + (yyvsp[(3) - (3)].st) -> val.ivalue);
+                                            (yyval.st) -> type = T_INTEGER;
+                                          }
                                         }else{
-                                          yyerror("Warning, implicit casting between int and float ");
-                                          (yyval.st) -> value = (yyvsp[(1) - (3)].st) -> value + (yyvsp[(3) - (3)].st)->value;
-                                          (yyval.st) -> type  = T_FLOAT;
+                                          //the types are not the same
+                                          yyerror("Warning 3, implicit casting between int and float ");
+                                          //check if term is int and factor is float
+                                          if((yyvsp[(1) - (3)].st) -> type == T_INTEGER && (yyvsp[(3) - (3)].st) -> type == T_FLOAT){
+                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value + (yyvsp[(3) - (3)].st) -> value);
+                                            (yyval.st) -> val.fvalue = ((float)((yyvsp[(1) - (3)].st) -> val.ivalue) + (yyvsp[(3) - (3)].st) -> val.fvalue);
+                                            (yyval.st) -> type = T_FLOAT;
+                                            //check if term is float and factor is int
+                                          }else if((yyvsp[(1) - (3)].st) -> type == T_FLOAT && (yyvsp[(3) - (3)].st) -> type == T_INTEGER){
+                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value + (yyvsp[(3) - (3)].st) -> value);
+                                            (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue + (float)((yyvsp[(3) - (3)].st) -> val.ivalue));
+                                            (yyval.st) -> type = T_FLOAT;
+                                          }
                                         }
                                       ;}
     break;
 
   case 32:
-#line 197 "tinyC.y"
+#line 234 "tinyC.y"
     {
-                                        if((yyvsp[(1) - (3)].st) ->type == (yyvsp[(3) - (3)].st) ->type){
-                                          (yyval.st) -> value = (yyvsp[(1) - (3)].st) -> value - (yyvsp[(3) - (3)].st) -> value;
-                                          (yyval.st) -> type  = (yyvsp[(1) - (3)].st) -> type;
+                                        // same type
+                                        if((yyvsp[(1) - (3)].st) -> type == (yyvsp[(3) - (3)].st) -> type){
+                                          if((yyvsp[(3) - (3)].st) -> type == T_FLOAT){
+                                            // the types are floating
+                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value - (yyvsp[(3) - (3)].st) -> value);
+                                            (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue - (yyvsp[(3) - (3)].st) -> val.fvalue);
+                                            (yyval.st) -> type = T_FLOAT;
+                                          }else{
+                                            // the types are integer
+                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value - (yyvsp[(3) - (3)].st) -> value);
+                                            (yyval.st) -> val.ivalue = ((yyvsp[(1) - (3)].st) -> val.ivalue - (yyvsp[(3) - (3)].st) -> val.ivalue);
+                                            (yyval.st) -> type = T_INTEGER;
+                                          }
                                         }else{
-                                          yyerror("Warning, implicit casting between int and float ");
-                                          (yyval.st) -> value = (yyvsp[(1) - (3)].st) -> value - (yyvsp[(3) - (3)].st) -> value;
-                                          (yyval.st) -> type  = T_FLOAT;
+                                          //the types are not the same
+                                          yyerror("Warning 2, implicit casting between int and float ");
+                                          //check if term is int and factor is float
+                                          if((yyvsp[(1) - (3)].st) -> type == T_INTEGER && (yyvsp[(3) - (3)].st) -> type == T_FLOAT){
+                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value - (yyvsp[(3) - (3)].st) -> value);
+                                            (yyval.st) -> val.fvalue = ((float)((yyvsp[(1) - (3)].st) -> val.ivalue) - (yyvsp[(3) - (3)].st) -> val.fvalue);
+                                            (yyval.st) -> type = T_FLOAT;
+                                            //check if term is float and factor is int
+                                          }else if((yyvsp[(1) - (3)].st) -> type == T_FLOAT && (yyvsp[(3) - (3)].st) -> type == T_INTEGER){
+                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value - (yyvsp[(3) - (3)].st) -> value);
+                                            (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue - (float)((yyvsp[(3) - (3)].st) -> val.ivalue));
+                                            (yyval.st) -> type = T_FLOAT;
+                                          }
                                         }
                                       ;}
     break;
 
   case 33:
-#line 207 "tinyC.y"
+#line 265 "tinyC.y"
     {
                                         (yyval.st) = (yyvsp[(1) - (1)].st);
                                       ;}
     break;
 
   case 34:
-#line 212 "tinyC.y"
-    {
-                                    if((yyvsp[(1) - (3)].st) -> type != (yyvsp[(3) - (3)].st) -> type){
-                                      yyerror("Warning, implicit casting between int and float ");
-                                      (yyval.st) -> type = T_FLOAT;
-                                      (yyval.st) -> value = (float)((yyvsp[(1) - (3)].st)->value * (yyvsp[(3) - (3)].st)->value);
-                                    }else{
-                                      (yyval.st) -> type = (yyvsp[(1) - (3)].st)->type;
-                                      if((yyvsp[(1) - (3)].st)->type == T_INTEGER){
-                                        (yyval.st) -> value = (int)((yyvsp[(1) - (3)].st)->value * (yyvsp[(3) - (3)].st)->value);
+#line 270 "tinyC.y"
+    { //equal types
+                                    if((yyvsp[(1) - (3)].st) -> type == (yyvsp[(3) - (3)].st) -> type){
+                                      if((yyvsp[(3) - (3)].st) -> type == T_FLOAT){
+                                        // the types are floating
+                                        (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value * (yyvsp[(3) - (3)].st) -> value);
+                                        (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue * (yyvsp[(3) - (3)].st) -> val.fvalue);
+                                        (yyval.st) -> type = T_FLOAT;
                                       }else{
-                                        (yyval.st) -> value = ((yyvsp[(1) - (3)].st)->value * (yyvsp[(3) - (3)].st)->value);
+                                        // the types are integer
+                                        (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value * (yyvsp[(3) - (3)].st) -> value);
+                                        (yyval.st) -> val.ivalue = ((yyvsp[(1) - (3)].st) -> val.ivalue * (yyvsp[(3) - (3)].st) -> val.ivalue);
+                                        (yyval.st) -> type = T_INTEGER;
+                                      }
+                                    }else{
+                                      //the types are not the same
+                                      yyerror("Warning 1, implicit casting between int and float ");
+                                      //check if term is int and factor is float
+                                      if((yyvsp[(1) - (3)].st) -> type == T_INTEGER && (yyvsp[(3) - (3)].st) -> type == T_FLOAT){
+                                        (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value * (yyvsp[(3) - (3)].st) -> value);
+                                        (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.ivalue * (yyvsp[(3) - (3)].st) -> val.fvalue);
+                                        (yyval.st) -> type = T_FLOAT;
+                                        //check if term is float and factor is int
+                                      }else if((yyvsp[(1) - (3)].st) -> type == T_FLOAT && (yyvsp[(3) - (3)].st) -> type == T_INTEGER){
+                                        (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value * (yyvsp[(3) - (3)].st) -> value);
+                                        (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue * (yyvsp[(3) - (3)].st) -> val.ivalue);
+                                        (yyval.st) -> type = T_FLOAT;
+                                      }
+                                    }
+                                    /*if($1 -> type != $3 -> type){
+                                      yyerror("Warning, implicit casting between int and float ");
+                                      $$ -> type = T_FLOAT;
+                                      $$ -> value = (float)($1->value * $3->value);
+                                    }else{
+                                      $$ -> type = $1->type;
+                                      if($1->type == T_INTEGER){
+                                        $$ -> value = (int)($1->value * $3->value);
+                                      }else{
+                                        $$ -> value = ($1->value * $3->value);
                                       }
                                       
                                     }
+                                    */
                                   ;}
     break;
 
   case 35:
-#line 227 "tinyC.y"
+#line 313 "tinyC.y"
     {
-                                    if((yyvsp[(3) - (3)].st)->value == 0.0){
+                                    if((yyvsp[(1) - (3)].st) -> type == (yyvsp[(3) - (3)].st) -> type){
+                                      //equal types
+                                      if((yyvsp[(3) - (3)].st) -> type == T_FLOAT){
+                                        // the types are floating
+                                        if((yyvsp[(3) - (3)].st) -> val.fvalue == 0.0){
+                                          yyerror("#term 2, Error, division by 0,");
+                                          return 1;
+                                        }else{
+                                          (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value / (yyvsp[(3) - (3)].st) -> value);
+                                          (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue / (yyvsp[(3) - (3)].st) -> val.fvalue);
+                                        }
+                                        // both are integers
+                                      }else{
+                                        yyerror("Division between two ints, implicit casting to float");
+                                        (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value / (yyvsp[(3) - (3)].st) -> value);
+                                        (yyval.st) -> val.fvalue = ((float)(yyvsp[(1) - (3)].st) -> val.ivalue / (float)(yyvsp[(3) - (3)].st) -> val.ivalue);
+                                        (yyval.st) -> type = T_FLOAT;
+                                      }
+                                    }else{
+                                      //the types are not the same
+                                      yyerror("#term 1, Warning, implicit casting between int and float ");
+                                      //check if term is int and factor is float
+                                      if((yyvsp[(1) - (3)].st) -> type == T_INTEGER && (yyvsp[(3) - (3)].st) -> type == T_FLOAT){
+                                        (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value / (yyvsp[(3) - (3)].st) -> value);
+                                        (yyval.st) -> val.fvalue = ((float)(yyvsp[(1) - (3)].st) -> val.ivalue / (yyvsp[(3) - (3)].st) -> val.fvalue);
+                                        (yyval.st) -> type = T_FLOAT;
+                                        //check if term is float and factor is int
+                                      }else if((yyvsp[(1) - (3)].st) -> type == T_FLOAT && (yyvsp[(3) - (3)].st) -> type == T_INTEGER){
+                                        (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value / (yyvsp[(3) - (3)].st) -> value);
+                                        (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue / (float)(yyvsp[(3) - (3)].st) -> val.ivalue);
+                                        (yyval.st) -> type = T_FLOAT;
+                                      }
+                                    }
+                                    /*if($3 -> value == 0.0){
                                       yyerror("Error, division by 0,");
                                       return 1;
                                     }else{
-                                      if((yyvsp[(1) - (3)].st) -> type != (yyvsp[(3) - (3)].st) -> type){
+                                      if($1 -> type != $3 -> type){
                                         yyerror("Warning, implicit casting between int and float ");
-                                        (yyval.st) -> type = T_FLOAT;
-                                        (yyval.st) -> value = (float)((yyvsp[(1) - (3)].st) -> value / (yyvsp[(3) - (3)].st) -> value);
+                                        $$ -> type = T_FLOAT;
+                                        $$ -> value = (float)($1 -> value / $3 -> value);
                                       }else{
-                                        (yyval.st) -> type = (yyvsp[(1) - (3)].st)->type;
-                                        (yyval.st) -> value = ((yyvsp[(1) - (3)].st) -> value / (yyvsp[(3) - (3)].st) -> value);
+                                        $$ -> type = $1->type;
+                                        $$ -> value = ($1 -> value / $3 -> value);
                                       } 
                                     }
+                                    */
                                   ;}
     break;
 
   case 36:
-#line 242 "tinyC.y"
+#line 362 "tinyC.y"
     {(yyval.st) = (yyvsp[(1) - (1)].st);;}
     break;
 
   case 37:
-#line 245 "tinyC.y"
+#line 365 "tinyC.y"
     {
                                     (yyval.st) = (yyvsp[(2) - (3)].st);
                                   ;}
     break;
 
   case 38:
-#line 248 "tinyC.y"
+#line 368 "tinyC.y"
     {
                                     SymbolTable *t = (SymbolTable*)malloc(sizeof(SymbolTable));
                                     t -> value = (yyvsp[(1) - (1)].ivalue);
+
+                                    t -> val.ivalue = (yyvsp[(1) - (1)].ivalue);
+                                    
                                     t -> type  = T_INTEGER;
                                     (yyval.st) = t;
                                     
@@ -1716,10 +1838,11 @@ yyreduce:
     break;
 
   case 39:
-#line 255 "tinyC.y"
+#line 378 "tinyC.y"
     {
                                     
                                     SymbolTable *t = (SymbolTable*)malloc(sizeof(SymbolTable));
+                                    t -> val.fvalue = (yyvsp[(1) - (1)].value);
                                     t -> value = (yyvsp[(1) - (1)].value);
                                     t -> type  = T_FLOAT;
                                     (yyval.st) = t;
@@ -1727,23 +1850,32 @@ yyreduce:
     break;
 
   case 40:
-#line 262 "tinyC.y"
+#line 386 "tinyC.y"
     {//se regresa el valor de la variable
                                     SymbolTable *t = (SymbolTable*)malloc(sizeof(SymbolTable));
-                                    t -> value = (yyvsp[(1) - (1)].st) -> value;
+
                                     t -> type  = (yyvsp[(1) - (1)].st) -> type;
+                                    t -> value = (yyvsp[(1) - (1)].st) -> value;
+
+                                    if((yyvsp[(1) - (1)].st) -> type == T_FLOAT){
+                                      t -> val.fvalue = (yyvsp[(1) - (1)].st) -> val.fvalue;
+                                    }else if((yyvsp[(1) - (1)].st) -> type == T_INTEGER){
+                                      t -> val.ivalue = (yyvsp[(1) - (1)].st) -> val.ivalue;
+                                    }
+
+                                    
                                     (yyval.st) = t;
                                   ;}
     break;
 
   case 41:
-#line 270 "tinyC.y"
+#line 403 "tinyC.y"
     {//variable contiene el nombre de la variable
                                     if(findValue(st, (yyvsp[(1) - (1)].name)) == TRUE){
                                       SymbolTable *t = getValue(st, (yyvsp[(1) - (1)].name));
                                       (yyval.st) = t;
                                     }else{
-                                      printf("No variable '%s' declared before\n", (yyvsp[(1) - (1)].name));
+                                      printf("#variable, No variable '%s' declared before\n", (yyvsp[(1) - (1)].name));
                                       yyerror("Error");
                                       return FALSE;
                                     }
@@ -1752,7 +1884,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1756 "tinyC.tab.c"
+#line 1888 "tinyC.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1966,7 +2098,7 @@ yyreturn:
 }
 
 
-#line 281 "tinyC.y"
+#line 414 "tinyC.y"
 
 
 #include "lex.yy.c"
@@ -2148,10 +2280,10 @@ void showTable(SymbolTable*tabla){
 #endif
     for(i=0; i< size; i++){
       //if(tabla[i].name != NULL){
-        if(tabla[i].type == 1){
-          printf("Index: %3d   name: %3s   type: int value: %d\n", i, tabla[i].name,(int)tabla[i].value);  
-        }else if(tabla[i].type == 2){
-          printf("Index: %3d   name: %3s   type: float value: %f\n", i, tabla[i].name, tabla[i].value);
+        if(tabla[i].type == T_INTEGER){
+          printf("Index: %3d   name: %3s   type: int value: %d\n", i, tabla[i].name,tabla[i].val.ivalue);  
+        }else if(tabla[i].type == T_FLOAT){
+          printf("Index: %3d   name: %3s   type: float value: %f\n", i, tabla[i].name, tabla[i].val.fvalue);
         }else{
           printf("Index: %3d   name: %3s   type: NULL \n", i, tabla[i].name);
         }
@@ -2159,6 +2291,7 @@ void showTable(SymbolTable*tabla){
       //}
     }
 }
+
 
 int main (){
   st = initSymbolTable();

@@ -26,6 +26,7 @@ typedef struct _symbolTable{
     char* name;
     int type;
     float value;
+    values val;
 }SymbolTable;
 
 
