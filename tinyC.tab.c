@@ -1643,12 +1643,12 @@ yyreduce:
                                         if((yyvsp[(1) - (3)].st) -> type == (yyvsp[(3) - (3)].st) -> type){
                                           if((yyvsp[(3) - (3)].st) -> type == T_FLOAT){
                                             // the types are floating
-                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value + (yyvsp[(3) - (3)].st) -> value);
+                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue + (yyvsp[(3) - (3)].st) -> val.fvalue);
                                             (yyval.st) -> type = T_FLOAT;
                                           }else{
                                             // the types are integer
-                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value + (yyvsp[(3) - (3)].st) -> value);
+                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             (yyval.st) -> val.ivalue = ((yyvsp[(1) - (3)].st) -> val.ivalue + (yyvsp[(3) - (3)].st) -> val.ivalue);
                                             (yyval.st) -> type = T_INTEGER;
                                           }
@@ -1657,12 +1657,12 @@ yyreduce:
                                           yyerror("Warning 3, implicit casting between int and float ");
                                           //check if term is int and factor is float
                                           if((yyvsp[(1) - (3)].st) -> type == T_INTEGER && (yyvsp[(3) - (3)].st) -> type == T_FLOAT){
-                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value + (yyvsp[(3) - (3)].st) -> value);
+                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             (yyval.st) -> val.fvalue = ((float)((yyvsp[(1) - (3)].st) -> val.ivalue) + (yyvsp[(3) - (3)].st) -> val.fvalue);
                                             (yyval.st) -> type = T_FLOAT;
                                             //check if term is float and factor is int
                                           }else if((yyvsp[(1) - (3)].st) -> type == T_FLOAT && (yyvsp[(3) - (3)].st) -> type == T_INTEGER){
-                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value + (yyvsp[(3) - (3)].st) -> value);
+                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue + (float)((yyvsp[(3) - (3)].st) -> val.ivalue));
                                             (yyval.st) -> type = T_FLOAT;
                                           }
@@ -1677,12 +1677,12 @@ yyreduce:
                                         if((yyvsp[(1) - (3)].st) -> type == (yyvsp[(3) - (3)].st) -> type){
                                           if((yyvsp[(3) - (3)].st) -> type == T_FLOAT){
                                             // the types are floating
-                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value - (yyvsp[(3) - (3)].st) -> value);
+                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue - (yyvsp[(3) - (3)].st) -> val.fvalue);
                                             (yyval.st) -> type = T_FLOAT;
                                           }else{
                                             // the types are integer
-                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value - (yyvsp[(3) - (3)].st) -> value);
+                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             (yyval.st) -> val.ivalue = ((yyvsp[(1) - (3)].st) -> val.ivalue - (yyvsp[(3) - (3)].st) -> val.ivalue);
                                             (yyval.st) -> type = T_INTEGER;
                                           }
@@ -1691,12 +1691,12 @@ yyreduce:
                                           yyerror("Warning 2, implicit casting between int and float ");
                                           //check if term is int and factor is float
                                           if((yyvsp[(1) - (3)].st) -> type == T_INTEGER && (yyvsp[(3) - (3)].st) -> type == T_FLOAT){
-                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value - (yyvsp[(3) - (3)].st) -> value);
+                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             (yyval.st) -> val.fvalue = ((float)((yyvsp[(1) - (3)].st) -> val.ivalue) - (yyvsp[(3) - (3)].st) -> val.fvalue);
                                             (yyval.st) -> type = T_FLOAT;
                                             //check if term is float and factor is int
                                           }else if((yyvsp[(1) - (3)].st) -> type == T_FLOAT && (yyvsp[(3) - (3)].st) -> type == T_INTEGER){
-                                            (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value - (yyvsp[(3) - (3)].st) -> value);
+                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue - (float)((yyvsp[(3) - (3)].st) -> val.ivalue));
                                             (yyval.st) -> type = T_FLOAT;
                                           }
@@ -1717,12 +1717,12 @@ yyreduce:
                                     if((yyvsp[(1) - (3)].st) -> type == (yyvsp[(3) - (3)].st) -> type){
                                       if((yyvsp[(3) - (3)].st) -> type == T_FLOAT){
                                         // the types are floating
-                                        (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value * (yyvsp[(3) - (3)].st) -> value);
+                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue * (yyvsp[(3) - (3)].st) -> val.fvalue);
                                         (yyval.st) -> type = T_FLOAT;
                                       }else{
                                         // the types are integer
-                                        (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value * (yyvsp[(3) - (3)].st) -> value);
+                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         (yyval.st) -> val.ivalue = ((yyvsp[(1) - (3)].st) -> val.ivalue * (yyvsp[(3) - (3)].st) -> val.ivalue);
                                         (yyval.st) -> type = T_INTEGER;
                                       }
@@ -1731,12 +1731,12 @@ yyreduce:
                                       yyerror("Warning 1, implicit casting between int and float ");
                                       //check if term is int and factor is float
                                       if((yyvsp[(1) - (3)].st) -> type == T_INTEGER && (yyvsp[(3) - (3)].st) -> type == T_FLOAT){
-                                        (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value * (yyvsp[(3) - (3)].st) -> value);
+                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.ivalue * (yyvsp[(3) - (3)].st) -> val.fvalue);
                                         (yyval.st) -> type = T_FLOAT;
                                         //check if term is float and factor is int
                                       }else if((yyvsp[(1) - (3)].st) -> type == T_FLOAT && (yyvsp[(3) - (3)].st) -> type == T_INTEGER){
-                                        (yyval.st) -> value      = ((yyvsp[(1) - (3)].st) -> value * (yyvsp[(3) - (3)].st) -> value);
+                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         (yyval.st) -> val.fvalue = ((yyvsp[(1) - (3)].st) -> val.fvalue * (yyvsp[(3) - (3)].st) -> val.ivalue);
                                         (yyval.st) -> type = T_FLOAT;
                                       }

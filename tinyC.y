@@ -204,12 +204,12 @@ simple_exp  : simple_exp PLUS term    {
                                         if($1 -> type == $3 -> type){
                                           if($3 -> type == T_FLOAT){
                                             // the types are floating
-                                            $$ -> value      = ($1 -> value + $3 -> value);
+                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             $$ -> val.fvalue = ($1 -> val.fvalue + $3 -> val.fvalue);
                                             $$ -> type = T_FLOAT;
                                           }else{
                                             // the types are integer
-                                            $$ -> value      = ($1 -> value + $3 -> value);
+                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             $$ -> val.ivalue = ($1 -> val.ivalue + $3 -> val.ivalue);
                                             $$ -> type = T_INTEGER;
                                           }
@@ -218,12 +218,12 @@ simple_exp  : simple_exp PLUS term    {
                                           yyerror("Warning 3, implicit casting between int and float ");
                                           //check if term is int and factor is float
                                           if($1 -> type == T_INTEGER && $3 -> type == T_FLOAT){
-                                            $$ -> value      = ($1 -> value + $3 -> value);
+                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             $$ -> val.fvalue = ((float)($1 -> val.ivalue) + $3 -> val.fvalue);
                                             $$ -> type = T_FLOAT;
                                             //check if term is float and factor is int
                                           }else if($1 -> type == T_FLOAT && $3 -> type == T_INTEGER){
-                                            $$ -> value      = ($1 -> value + $3 -> value);
+                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             $$ -> val.fvalue = ($1 -> val.fvalue + (float)($3 -> val.ivalue));
                                             $$ -> type = T_FLOAT;
                                           }
@@ -236,12 +236,12 @@ simple_exp  : simple_exp PLUS term    {
                                         if($1 -> type == $3 -> type){
                                           if($3 -> type == T_FLOAT){
                                             // the types are floating
-                                            $$ -> value      = ($1 -> value - $3 -> value);
+                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             $$ -> val.fvalue = ($1 -> val.fvalue - $3 -> val.fvalue);
                                             $$ -> type = T_FLOAT;
                                           }else{
                                             // the types are integer
-                                            $$ -> value      = ($1 -> value - $3 -> value);
+                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             $$ -> val.ivalue = ($1 -> val.ivalue - $3 -> val.ivalue);
                                             $$ -> type = T_INTEGER;
                                           }
@@ -250,12 +250,12 @@ simple_exp  : simple_exp PLUS term    {
                                           yyerror("Warning 2, implicit casting between int and float ");
                                           //check if term is int and factor is float
                                           if($1 -> type == T_INTEGER && $3 -> type == T_FLOAT){
-                                            $$ -> value      = ($1 -> value - $3 -> value);
+                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             $$ -> val.fvalue = ((float)($1 -> val.ivalue) - $3 -> val.fvalue);
                                             $$ -> type = T_FLOAT;
                                             //check if term is float and factor is int
                                           }else if($1 -> type == T_FLOAT && $3 -> type == T_INTEGER){
-                                            $$ -> value      = ($1 -> value - $3 -> value);
+                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             $$ -> val.fvalue = ($1 -> val.fvalue - (float)($3 -> val.ivalue));
                                             $$ -> type = T_FLOAT;
                                           }
@@ -271,12 +271,12 @@ term        : term TIMES factor   { //equal types
                                     if($1 -> type == $3 -> type){
                                       if($3 -> type == T_FLOAT){
                                         // the types are floating
-                                        $$ -> value      = ($1 -> value * $3 -> value);
+                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         $$ -> val.fvalue = ($1 -> val.fvalue * $3 -> val.fvalue);
                                         $$ -> type = T_FLOAT;
                                       }else{
                                         // the types are integer
-                                        $$ -> value      = ($1 -> value * $3 -> value);
+                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         $$ -> val.ivalue = ($1 -> val.ivalue * $3 -> val.ivalue);
                                         $$ -> type = T_INTEGER;
                                       }
@@ -285,12 +285,12 @@ term        : term TIMES factor   { //equal types
                                       yyerror("Warning 1, implicit casting between int and float ");
                                       //check if term is int and factor is float
                                       if($1 -> type == T_INTEGER && $3 -> type == T_FLOAT){
-                                        $$ -> value      = ($1 -> value * $3 -> value);
+                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         $$ -> val.fvalue = ($1 -> val.ivalue * $3 -> val.fvalue);
                                         $$ -> type = T_FLOAT;
                                         //check if term is float and factor is int
                                       }else if($1 -> type == T_FLOAT && $3 -> type == T_INTEGER){
-                                        $$ -> value      = ($1 -> value * $3 -> value);
+                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         $$ -> val.fvalue = ($1 -> val.fvalue * $3 -> val.ivalue);
                                         $$ -> type = T_FLOAT;
                                       }

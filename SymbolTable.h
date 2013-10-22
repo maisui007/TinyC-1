@@ -23,7 +23,7 @@ typedef union _values{
 	float fvalue;
 }values;
 typedef struct _symbolTable{
-    char* name;
+    string name;
     int type;
     float value;
     values val;
