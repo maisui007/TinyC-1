@@ -44,3 +44,7 @@ typedef struct _symbolTable{
 ```
 Esta es la tabla de símbolos, la cual tiene un nombre, un tipo, y una estructura de valores.
 **NOTAS: la variable `float value` es una variable temporal que se está usando para pruebas, al final del proyecto se debe quitar**
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04feeaaba14c1fc70ea6d458efe9690792aeb9f8

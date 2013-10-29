@@ -16,6 +16,8 @@
 #define TRUE 0
 #define T_INTEGER 1
 #define T_FLOAT 2
+#define T_ERROR 3
+#define T_EMPTY 4
 typedef char*string;
 
 typedef union _values{

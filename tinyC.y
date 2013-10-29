@@ -15,6 +15,7 @@
   #include "SymbolTable.h"
   void yyerror (char *string);
   extern int yylineno;
+  int controlIf=TRUE;
 %}
 %union{
   int type;
@@ -27,8 +28,8 @@
   %token <value> INTEGER FLOAT 
   %token <name> ID 
 
-  %type<value>  single_dec stmt  
-  %type<st> variable factor term simple_exp exp
+  %type<value>  single_dec   
+  %type<st> variable factor term simple_exp exp block stmt_seq stmt
   %type<type> type
 
 
@@ -110,17 +111,18 @@ stmt_seq    : stmt_seq stmt
             | /*epsilon*/
             ;
 
-stmt        : IF exp THEN stmt
-            | IF exp THEN stmt ELSE stmt
+stmt        : IF exp THEN stmt            {
+                                            
+                                          }
+            | IF exp THEN stmt ELSE stmt  {}
             | WHILE exp DO stmt
             | variable ASSIGN exp SEMI    { //the variable and expression is the same
+                                            
                                             SymbolTable * t = getValue(st, $1->name);
                                             if($1 -> type == $3 -> type){
                                               if($1 -> type == T_FLOAT){
-                                                //$1 -> val.fvalue = $3 -> val.fvalue;
                                                 t -> val.fvalue  = $3 -> val.fvalue;
                                               }else if($1 -> type == T_INTEGER){
-                                                //$1 -> val.ivalue = $3 -> val.ivalue;
                                                 t -> val.ivalue  = $3 -> val.ivalue;
                                               }
                                             //the variable and expression not the same  
@@ -128,71 +130,68 @@ stmt        : IF exp THEN stmt
                                               yyerror("#Warning 4, implicit casting between int and float ");
                                               //check if term is int and factor is float
                                               if($1 -> type == T_INTEGER && $3 -> type == T_FLOAT){
-                                                //$$ -> value      = ($1 -> value + $3 -> value);
-                                                //$1 -> val.ivalue = (int)$3 -> val.fvalue;
                                                 t -> val.ivalue  = (int)$3 -> val.fvalue;
                                                 //check if term is float and factor is int
                                               }else if($1 -> type == T_FLOAT && $3 -> type == T_INTEGER){
-                                                //$$ -> value      = ($1 -> value + $3 -> value);
-                                                //$1 -> val.fvalue = (float)$3 -> val.ivalue;
                                                 t -> val.fvalue  = (float)$3 -> val.ivalue;
                                               }
-                                            }
-                                            /*if(findValue(st, $1->name) == FALSE){
-                                              printf("No variable '%s' declared before\n", $1->name);
-                                              yyerror("Error");
-                                              return FALSE;
-                                            }else{
-                                              //operation
-                                              SymbolTable * t1 = getValue(st, $1->name);
-                                              t1 -> value = $3->value;
-                                            }
-                                            */
-                                            
+                                            }                                            
                                           }
-            | variable EQUALSM1 exp SEMI       {/*
-                                                if(findValue(st, $1->name) == FALSE){
-                                                  printf("No variable '%s' declared before\n", $1->name);
-                                                  yyerror("Error");
-                                                  return FALSE;
-                                                }else{
-                                                  //operation
-                                                  if($1->type == T_INTEGER){ //int
-                                                    $1 -> value = (int)($1 -> value - $3->value);
+            | variable EQUALSM1 exp SEMI       {}
+            | variable EQUALSP1 exp SEMI       {}
+
+            | PLUS1 variable SEMI              {
+                                                  SymbolTable * t = getValue(st, $2->name);
+                                                  if($2 -> type == T_FLOAT){
+                                                      t -> val.fvalue  += 1.0;
                                                   }else{
-                                                    $1 -> value = ($1 -> value - $3->value);
-                                                  }
-                                                }*/
-                                              }
-            | variable EQUALSP1 exp SEMI       {/*
-                                                  if(findValue(st, $1->name) == FALSE){
-                                                    printf("No variable '%s' declared before\n", $1->name);
-                                                    yyerror("Error");
-                                                    return FALSE;
-                                                  }else{
-                                                    //operation
-                                                    if($1->type == T_INTEGER){ //int
-                                                      $1 -> value = (int)($1 -> value + $3->value);
-                                                    }else{
-                                                      $1 -> value = ($1 -> value + $3->value);
-                                                    }
-                                                  }*/
+                                                      t -> val.ivalue  += 1;
+                                                  }     
                                                 }
-            | PLUS1 variable SEMI              {}
-            | variable PLUS1 SEMI              {}
-            | MINUS1 variable SEMI             {}
-            | variable MINUS1 SEMI              {}
+
+            | variable PLUS1 SEMI              {
+                                                  SymbolTable * t = getValue(st, $1->name);
+                                                  if($1 -> type == T_FLOAT){
+                                                      t -> val.fvalue  += 1.0;
+                                                  }else{
+                                                      t -> val.ivalue  += 1;
+                                                  }      
+                                                }
+
+            | MINUS1 variable SEMI             {
+                                                  SymbolTable * t = getValue(st, $2->name);
+                                                  if($2 -> type == T_FLOAT){
+                                                      t -> val.fvalue  -= 1.0;
+                                                  }else{
+                                                      t -> val.ivalue  -= 1;
+                                                  }  
+                                                }
+
+            | variable MINUS1 SEMI              {
+                                                 SymbolTable * t = getValue(st, $1->name);
+                                                  if($1 -> type == T_FLOAT){
+                                                      t -> val.fvalue  -= 1.0;
+                                                  }else{
+                                                      t -> val.ivalue  -= 1;
+                                                  }  
+                                                }
             | READ LPAREN variable RPAREN SEMI {}
             | WRITE LPAREN exp RPAREN SEMI     {}
             | PRINTF LPAREN STRING RPAREN SEMI {}
-            | block
+            | block                            {}
             ;
 
-block       : LBRACE stmt_seq RBRACE
+block       : LBRACE stmt_seq RBRACE        {
+                                              $$ = $2;
+                                            }
             ;
 
-exp         : simple_exp LT simple_exp      {}
-            | simple_exp EQ simple_exp      {}
+exp         : simple_exp LT simple_exp      {
+                                              
+                                            }
+            | simple_exp EQ simple_exp      {
+                                            
+                                            }
             | simple_exp MT simple_exp      {}
             | simple_exp LOE simple_exp     {} 
             | simple_exp ITSNOT simple_exp  {}
@@ -204,26 +203,22 @@ simple_exp  : simple_exp PLUS term    {
                                         if($1 -> type == $3 -> type){
                                           if($3 -> type == T_FLOAT){
                                             // the types are floating
-                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             $$ -> val.fvalue = ($1 -> val.fvalue + $3 -> val.fvalue);
                                             $$ -> type = T_FLOAT;
                                           }else{
                                             // the types are integer
-                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             $$ -> val.ivalue = ($1 -> val.ivalue + $3 -> val.ivalue);
                                             $$ -> type = T_INTEGER;
                                           }
                                         }else{
                                           //the types are not the same
-                                          yyerror("Warning 3, implicit casting between int and float ");
+                                          yyerror("Warning, implicit casting between int and float ");
                                           //check if term is int and factor is float
                                           if($1 -> type == T_INTEGER && $3 -> type == T_FLOAT){
-                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             $$ -> val.fvalue = ((float)($1 -> val.ivalue) + $3 -> val.fvalue);
                                             $$ -> type = T_FLOAT;
                                             //check if term is float and factor is int
                                           }else if($1 -> type == T_FLOAT && $3 -> type == T_INTEGER){
-                                            //$$ -> value      = ($1 -> value + $3 -> value);
                                             $$ -> val.fvalue = ($1 -> val.fvalue + (float)($3 -> val.ivalue));
                                             $$ -> type = T_FLOAT;
                                           }
@@ -236,26 +231,22 @@ simple_exp  : simple_exp PLUS term    {
                                         if($1 -> type == $3 -> type){
                                           if($3 -> type == T_FLOAT){
                                             // the types are floating
-                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             $$ -> val.fvalue = ($1 -> val.fvalue - $3 -> val.fvalue);
                                             $$ -> type = T_FLOAT;
                                           }else{
                                             // the types are integer
-                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             $$ -> val.ivalue = ($1 -> val.ivalue - $3 -> val.ivalue);
                                             $$ -> type = T_INTEGER;
                                           }
                                         }else{
                                           //the types are not the same
-                                          yyerror("Warning 2, implicit casting between int and float ");
+                                          yyerror("Warning, implicit casting between int and float ");
                                           //check if term is int and factor is float
                                           if($1 -> type == T_INTEGER && $3 -> type == T_FLOAT){
-                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             $$ -> val.fvalue = ((float)($1 -> val.ivalue) - $3 -> val.fvalue);
                                             $$ -> type = T_FLOAT;
                                             //check if term is float and factor is int
                                           }else if($1 -> type == T_FLOAT && $3 -> type == T_INTEGER){
-                                            //$$ -> value      = ($1 -> value - $3 -> value);
                                             $$ -> val.fvalue = ($1 -> val.fvalue - (float)($3 -> val.ivalue));
                                             $$ -> type = T_FLOAT;
                                           }
@@ -271,44 +262,26 @@ term        : term TIMES factor   { //equal types
                                     if($1 -> type == $3 -> type){
                                       if($3 -> type == T_FLOAT){
                                         // the types are floating
-                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         $$ -> val.fvalue = ($1 -> val.fvalue * $3 -> val.fvalue);
                                         $$ -> type = T_FLOAT;
                                       }else{
                                         // the types are integer
-                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         $$ -> val.ivalue = ($1 -> val.ivalue * $3 -> val.ivalue);
                                         $$ -> type = T_INTEGER;
                                       }
                                     }else{
                                       //the types are not the same
-                                      yyerror("Warning 1, implicit casting between int and float ");
+                                      yyerror("Warning, implicit casting between int and float ");
                                       //check if term is int and factor is float
                                       if($1 -> type == T_INTEGER && $3 -> type == T_FLOAT){
-                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         $$ -> val.fvalue = ($1 -> val.ivalue * $3 -> val.fvalue);
                                         $$ -> type = T_FLOAT;
                                         //check if term is float and factor is int
                                       }else if($1 -> type == T_FLOAT && $3 -> type == T_INTEGER){
-                                        //$$ -> value      = ($1 -> value * $3 -> value);
                                         $$ -> val.fvalue = ($1 -> val.fvalue * $3 -> val.ivalue);
                                         $$ -> type = T_FLOAT;
                                       }
                                     }
-                                    /*if($1 -> type != $3 -> type){
-                                      yyerror("Warning, implicit casting between int and float ");
-                                      $$ -> type = T_FLOAT;
-                                      $$ -> value = (float)($1->value * $3->value);
-                                    }else{
-                                      $$ -> type = $1->type;
-                                      if($1->type == T_INTEGER){
-                                        $$ -> value = (int)($1->value * $3->value);
-                                      }else{
-                                        $$ -> value = ($1->value * $3->value);
-                                      }
-                                      
-                                    }
-                                    */
                                   }
             | term DIV factor     {
                                     if($1 -> type == $3 -> type){
@@ -316,7 +289,7 @@ term        : term TIMES factor   { //equal types
                                       if($3 -> type == T_FLOAT){
                                         // the types are floating
                                         if($3 -> val.fvalue == 0.0){
-                                          yyerror("#term 2, Error, division by 0,");
+                                          yyerror("#Error, division by 0,");
                                           return 1;
                                         }else{
                                           $$ -> value      = ($1 -> value / $3 -> value);
@@ -324,10 +297,16 @@ term        : term TIMES factor   { //equal types
                                         }
                                         // both are integers
                                       }else{
-                                        yyerror("Division between two ints, implicit casting to float");
-                                        $$ -> value      = ($1 -> value / $3 -> value);
-                                        $$ -> val.fvalue = ((float)$1 -> val.ivalue / (float)$3 -> val.ivalue);
-                                        $$ -> type = T_FLOAT;
+                                        if($3 -> val.ivalue == 0){
+                                          yyerror("#Error, division by 0,");
+                                          return 1;
+                                        }else{
+                                          yyerror("Division between two ints, implicit casting to float");
+                                          $$ -> value      = ($1 -> value / $3 -> value);
+                                          $$ -> val.fvalue = ((float)$1 -> val.ivalue / (float)$3 -> val.ivalue);
+                                          $$ -> type = T_FLOAT;  
+                                        }
+                                        
                                       }
                                     }else{
                                       //the types are not the same
@@ -344,20 +323,6 @@ term        : term TIMES factor   { //equal types
                                         $$ -> type = T_FLOAT;
                                       }
                                     }
-                                    /*if($3 -> value == 0.0){
-                                      yyerror("Error, division by 0,");
-                                      return 1;
-                                    }else{
-                                      if($1 -> type != $3 -> type){
-                                        yyerror("Warning, implicit casting between int and float ");
-                                        $$ -> type = T_FLOAT;
-                                        $$ -> value = (float)($1 -> value / $3 -> value);
-                                      }else{
-                                        $$ -> type = $1->type;
-                                        $$ -> value = ($1 -> value / $3 -> value);
-                                      } 
-                                    }
-                                    */
                                   }
             | factor              {$$ = $1;}
             ;
