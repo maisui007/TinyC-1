@@ -49,3 +49,41 @@ Esta es la tabla de símbolos, la cual tiene un nombre, un tipo, y una estructur
 =======
 
 >>>>>>> 04feeaaba14c1fc70ea6d458efe9690792aeb9f8
+```
+
+Para la generación de código se utiliza un struct de apuntadores que van guardando línea por linea el código que se va reconociendo.
+
+```
+typedef struct _line{
+  int quad;               // El renglón actual
+  string operation;       // Operador
+  string arg1;            // Argumento 1
+  string arg2;            // Argumento 2
+  string destination;     // Destino
+  string code;            // Código concatenado
+  string true_list;       // True List de la Expresión
+  string false_list;      // False List de la Expresión
+  string next_list;       // Next List de la Expresión
+}Line;
+```
+
+Cabe mencionar que todo el código que se va generando, se va guardando en un arreglo de structs del tipo _line y al finalizar el análisis se imprime la tabla de código con el formato de un quad.
+
+```
+"No. quad"  "Operador"  "Argumento1"  "Argumento2"  "Destino"
+```
+Por ejemplo la expresión:
+
+```
+while (a < b) do
+b:= a;
+```
+
+Se vería de esta manera:
+
+```
+3 < a b 5            //if a < b goto 5
+4 - - - S.next       //goto S.next
+5 = b a -            //a = b
+6 - - - 3            //goto 3
+```
